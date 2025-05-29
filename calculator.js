@@ -121,6 +121,7 @@ const calculator = new Calculator();
 const mainDisplay = document.getElementById("mainDisplay");
 const memoryDisplay = document.getElementById("memory");
 const decimal = document.getElementById("decimal");
+const neg = document.getElementById("neg");
 let num = "";
 let num2 = "";
 let op = "";
@@ -161,14 +162,19 @@ function addEventListeners(){
                 console.log("first time")
                 //if num isn't typed, then type that.
                 if(op == ""){
-                    console.log(e.target == decimal)
-                    if(e.target != decimal || num.indexOf(".") == -1){
-                        num += e.target.innerText.trim();
-                        num = "" + validifyNumber(num);
+                    console.log(repeatingButton(e.target, num))
+                    if(!repeatingButton(e.target, num)){
+                        validifyMainNumber(e);
                     }
                 }else if(op != ""){
                     //Time to type out num2 since there is no memory
-                    if(e.target != decimal || num2.indexOf(".") == -1){
+                    if(!repeatingButton(e.target, num2)){
+                        if(e.target == neg && num2 != ""){
+                            return;
+                        }else if(e.target == neg){
+                            num2 += "-";
+                            return;
+                        }
                         num2 += e.target.innerText.trim();
                         num2 = "" + validifyNumber(num2);
                     }
@@ -181,17 +187,16 @@ function addEventListeners(){
                 if(op != ""){
                     console.log("memory")
                     console.log(e.target == decimal)
-                    if(e.target != decimal || num.indexOf(".") == -1){
-                        num += e.target.innerText.trim();
-                        num = "" + validifyNumber(num);
+                    
+                    if(!repeatingButton(e.target, num)){
+                        validifyMainNumber(e)
                     }
 
                 }else if(op == ""){
 
                     calculator.clear();
-                    if(e.target != decimal || num.indexOf(".") == -1){
-                        num += e.target.innerText.trim();
-                        num = "" + validifyNumber(num);
+                    if(!repeatingButton(e.target, num)){
+                        validifyMainNumber(e)
                     }
 
                 }
@@ -205,6 +210,18 @@ function addEventListeners(){
             appendText()
         })
     }
+}
+
+function validifyMainNumber(e) {
+    console.log(e.target)
+    if(e.target == neg && num != ""){
+        return;
+    }else if(e.target == neg){
+        num += "-";
+        return;
+    }
+    num += e.target.innerText.trim();
+    num = "" + validifyNumber(num);
 }
 
 function setOp(operator){
@@ -285,6 +302,10 @@ function appendText(){
 
 
 addEventListeners();
+
+function repeatingButton(target, numText){
+    return (target == decimal && numText.indexOf(".") != -1) || (target == neg && numText.indexOf("-") != -1)
+}
 
 document.getElementById("clear").onclick = () => {
     
