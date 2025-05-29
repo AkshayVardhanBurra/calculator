@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculator</title>
+    <style>
+        body {
+            background: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        .calculator {
+            background: #222;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .display {
+            background: #111;
+            color: #fff;
+            font-size: 2.2rem;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: right;
+            min-height: 2.5em;
+            letter-spacing: 1px;
+            overflow-x: auto;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+        }
+        button {
+            padding: 1rem;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 8px;
+            background: #333;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:active {
+            background: #444;
+        }
+        .operator {
+            background: #ff9500;
+            color: #fff;
+        }
+        .operator:active {
+            background: #e08a00;
+        }
+        .equals {
+            background: #34c759;
+            color: #fff;
+            grid-column: span 2;
+        }
+        .equals:active {
+            background: #28a745;
+        }
+        .clear {
+            background: #ff3b30;
+            color: #fff;
+        }
+        .clear:active {
+            background: #c82333;
+        }
+    </style>
+    <script src="calculator.js" defer></script>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display" id="mainDisplay">0</div>
+        <div class="display" id="memory" style="font-size:1rem; color:#bbb; min-height:1.2em; text-align:right; margin-bottom:-0.5em;"></div>
+        <div class="buttons">
+            <button id = "clear" class="clear">C</button>
+            <button>±</button>
+            <button>%</button>
+            <button class="operator" id = "div">÷</button>
+            <button class="number">7</button>
+            <button class="number">8</button>
+            <button class="number">9</button>
+            <button class="operator" id = "mul">×</button>
+            <button class="number">4</button>
+            <button class="number">5</button>
+            <button class="number">6</button>
+            <button class="operator" id = "minus">−</button>
+            <button class="number">1</button>
+            <button class="number">2</button>
+            <button class="number">3</button>
+            <button class="operator" id="plus">+</button>
+            <button class="number">0</button>
+            <button class="number">.</button>
+            <button id="equal" class="equals">=</button>
+        </div>
+    </div>
+</body>
+</html>
