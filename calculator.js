@@ -49,7 +49,7 @@ class Calculator {
                 this.current = this.memory - this.num1;
             }
         }
-
+        
         this.memory = this.current;
     }
 
@@ -97,13 +97,17 @@ class Calculator {
 
     setDisplay(display1, display2){
         
-        display1.innerText = this.current == 0 ? "0" : this.current;
+        display1.innerText = this.current == 0 ? "0" : this.getFixed(4);
         
         if(this.isFirstTime()){
             display2.innerText = "";
         }else{
             display2.innerText = "" + this.memory;
         }
+    }
+
+    getFixed(num){
+        return this.current.toFixed(num)
     }
 
     
@@ -116,7 +120,7 @@ const equals = document.getElementById("equal");
 const calculator = new Calculator();
 const mainDisplay = document.getElementById("mainDisplay");
 const memoryDisplay = document.getElementById("memory");
-
+const decimal = document.getElementById("decimal");
 let num = "";
 let num2 = "";
 let op = "";
@@ -124,7 +128,7 @@ let op = "";
 equals.onclick = () => {
     console.log("here!!!!")
     if(calculator.isFirstTime() && num != "" && num2 != ""){
-        calculator.setNumbers(validifyNumber(num), validifyNumber(num2), op);
+        calculator.setNumbers(parseFloat(validifyNumber(num)), parseFloat(validifyNumber(num2)), op);
         calculator.operate()
         calculator.setDisplay(mainDisplay, memoryDisplay)
 
@@ -132,7 +136,7 @@ equals.onclick = () => {
         num2 = "";
         op = "";
     }else if(!calculator.isFirstTime() && num != "" && op != ""){
-        calculator.setNumbers(validifyNumber(num), null, op);
+        calculator.setNumbers(parseFloat(validifyNumber(num)), null, op);
         calculator.operate()
         calculator.setDisplay(mainDisplay, memoryDisplay)
 
@@ -143,6 +147,8 @@ equals.onclick = () => {
 
     op = "";
 }
+
+
 
 function addEventListeners(){
     const buttons = document.getElementsByClassName("number");
@@ -155,12 +161,17 @@ function addEventListeners(){
                 console.log("first time")
                 //if num isn't typed, then type that.
                 if(op == ""){
-                    num += e.target.innerText.trim();
-                    num = "" + validifyNumber(num);
+                    console.log(e.target == decimal)
+                    if(e.target != decimal || num.indexOf(".") == -1){
+                        num += e.target.innerText.trim();
+                        num = "" + validifyNumber(num);
+                    }
                 }else if(op != ""){
                     //Time to type out num2 since there is no memory
-                    num2 += e.target.innerText.trim();
-                    num2 = "" + validifyNumber(num2);
+                    if(e.target != decimal || num2.indexOf(".") == -1){
+                        num2 += e.target.innerText.trim();
+                        num2 = "" + validifyNumber(num2);
+                    }
                 }
             }else{
                 //Not the first time. There is something in memory.
@@ -168,10 +179,21 @@ function addEventListeners(){
                 //if the user types a number and there is an operator, add it to num
 
                 if(op != ""){
-                    num += validifyNumber(e.target.innerText.trim()) + "";
+                    console.log("memory")
+                    console.log(e.target == decimal)
+                    if(e.target != decimal || num.indexOf(".") == -1){
+                        num += e.target.innerText.trim();
+                        num = "" + validifyNumber(num);
+                    }
+
                 }else if(op == ""){
+
                     calculator.clear();
-                    num += validifyNumber(e.target.innerText.trim()) + "";
+                    if(e.target != decimal || num.indexOf(".") == -1){
+                        num += e.target.innerText.trim();
+                        num = "" + validifyNumber(num);
+                    }
+
                 }
             }
             
@@ -197,7 +219,7 @@ function setOp(operator){
     //if num1 operator num2 is typed out and another operator is being added
     if(op != "" && num2 != ""){
         //operate the initial
-        calculator.setNumbers(validifyNumber(num), validifyNumber(num2), op);
+        calculator.setNumbers(parseFloat(validifyNumber(num)), parseFloat(validifyNumber(num2)), op);
         calculator.operate(); // this will put the result in memory and on main display.
         calculator.setDisplay(mainDisplay, memoryDisplay)
         num2 = "";
@@ -206,7 +228,7 @@ function setOp(operator){
         //update the display
     }else if(op != "" && !calculator.isFirstTime()){
         //That means
-        calculator.setNumbers(validifyNumber(num),null, op);
+        calculator.setNumbers(parseFloat(validifyNumber(num)),null, op);
         calculator.operate();
         calculator.setDisplay(mainDisplay, memoryDisplay)
         num = "";
@@ -239,13 +261,16 @@ document.getElementById("div").onclick = (e) => {
 
 
 function validifyNumber(number){
+    
     number = number.trim();
     if(number == "."){
         return "0.";
     }else if(number == "0."){
         return "0.";
+    }else if(number.length > 0 && number[number.length - 1] == "."){
+        return number;
     }
-    return parseFloat(number);
+    return number
 }
 
 
@@ -254,7 +279,7 @@ function appendText(){
         mainDisplay.innerText = num + " " + op + " " + num2;
     }else{
         console.log("in the appendText")
-        mainDisplay.innerText = String(calculator.current) + " " + op + " " + num;
+        mainDisplay.innerText = calculator.getFixed(4) + " " + op + " " + num;
     }
 }
 
